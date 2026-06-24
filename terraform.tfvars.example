@@ -1,0 +1,13 @@
+project_id      = "gen-lang-client-0520086142"
+region          = "us-central1" # Must be us-west1, us-central1, or us-east1 for Free Tier.
+instance_name   = "my-cloud-sql-instance"
+database_name   = "mydb"
+database_user   = "user"
+tier            = "db-f1-micro"
+
+# MySQL (default)
+database_version = "MYSQL_8_0"
+
+# PostgreSQL examples (uncomment one to use instead)
+# database_version = "POSTGRES_14"
+# database_version = "POSTGRES_15"
