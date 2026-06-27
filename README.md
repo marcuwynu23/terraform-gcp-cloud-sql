@@ -85,17 +85,32 @@ To stay within the free tier, ensure your usage does not exceed:
 
 Reference this repository as a Terraform module in your own configurations:
 
-```hcl
-module "cloud_sql" {
-  source = "github.com/marcuwynu23/terraform-gcp-cloud-sql?ref=main"
-
-  project_id     = var.project_id
-  region         = "us-central1"
-  instance_name  = "my-app-sql"
-  database_name  = "appdb"
-  database_user  = "appuser"
-}
-```
+> **Option 1**: Terraform Registry (recommended)
+> ```hcl
+> module "cloud-sql" {
+>   source  = "marcuwynu23/cloud-sql/gcp"
+>   version = "1.0.0"
+>
+>   project_id     = var.project_id
+>   region         = "us-central1"
+>   instance_name  = "my-app-sql"
+>   database_name  = "appdb"
+>   database_user  = "appuser"
+> }
+> ```
+>
+> **Option 2**: GitHub source
+> ```hcl
+> module "cloud-sql" {
+>   source = "github.com/marcuwynu23/terraform-gcp-cloud-sql?ref=main"
+>
+>   project_id     = var.project_id
+>   region         = "us-central1"
+>   instance_name  = "my-app-sql"
+>   database_name  = "appdb"
+>   database_user  = "appuser"
+> }
+> ```
 
 Then use the outputs in your configuration:
 
