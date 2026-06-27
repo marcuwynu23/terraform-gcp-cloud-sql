@@ -4,8 +4,8 @@ provider "google" {
 }
 
 resource "random_password" "db_password" {
-  length  = 16
-  special = true
+  length           = 16
+  special          = true
   override_special = "!@#$%^&*"
 }
 
@@ -35,8 +35,8 @@ resource "google_sql_database_instance" "instance" {
 }
 
 resource "google_sql_database" "database" {
-  name      = var.database_name
-  instance  = google_sql_database_instance.instance.name
+  name     = var.database_name
+  instance = google_sql_database_instance.instance.name
 }
 
 resource "google_sql_user" "user" {
