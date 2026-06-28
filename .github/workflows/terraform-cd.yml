@@ -38,7 +38,7 @@ on:
         type: string
         default: MYSQL_8_0
       tier:
-        description: Machine type (Free Tier: db-f1-micro)
+        description: "Machine type (Free Tier: db-f1-micro)"
         required: true
         type: string
         default: db-f1-micro
