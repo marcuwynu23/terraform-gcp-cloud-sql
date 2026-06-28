@@ -81,6 +81,24 @@ To stay within the free tier, ensure your usage does not exceed:
 4.  **Outputs**:
     After a successful deployment, Terraform will output the instance details.
 
+## CI/CD Setup (GitHub Actions)
+
+1. **Enable the Cloud SQL Admin API** in your GCP project:
+    ```bash
+    gcloud services enable sqladmin.googleapis.com
+    ```
+
+2. **Create a service account** with the `Cloud SQL Admin` role and generate a JSON key:
+    - GCP Console → IAM & Admin → Service Accounts → Create Service Account
+    - Grant role: **Cloud SQL Admin**
+    - Keys → Add Key → Create New Key → JSON
+    - Copy the entire JSON file contents
+
+3. **Add a GitHub secret** named `GCP_SA_KEY` containing the full JSON key from step 2:
+    - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+    - Name: `GCP_SA_KEY`
+    - Value: (paste the entire JSON contents)
+
 ## Usage as a Module
 
 Reference this repository as a Terraform module in your own configurations:
