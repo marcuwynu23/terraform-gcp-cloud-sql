@@ -1,4 +1,4 @@
-project_id      = "gen-lang-client-0520086142"
+project_id      = "your-project-id"
 region          = "us-central1" # Must be us-west1, us-central1, or us-east1 for Free Tier.
 instance_name   = "my-cloud-sql-instance"
 database_name   = "mydb"
