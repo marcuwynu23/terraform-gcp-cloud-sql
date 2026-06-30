@@ -2,7 +2,20 @@ name: CD - Terraform Destroy
 
 on:
   workflow_dispatch:
-
+    inputs:
+      project_id:
+        description: GCP project ID
+        required: true
+        type: string
+      region:
+        description: "GCP region (Free Tier: us-west1, us-central1, us-east1)"
+        required: true
+        type: string
+        default: us-central1
+      instance_name:
+        description: Name of the Cloud SQL instance
+        required: true
+        type: string
 
 env:
   TF_BUCKET_NAME: ${{ secrets.TF_BUCKET_NAME }}
@@ -30,7 +43,21 @@ jobs:
           -backend-config="prefix=$TF_BUCKET_PREFIX"
     - name: Terraform Plan
       run: |
-        terraform plan -destroy 
+        terraform plan -destroy \
+          -var="project_id=${{ github.event.inputs.project_id }}" \
+          -var="region=${{ github.event.inputs.region }}" \
+          -var="instance_name=${{ github.event.inputs.instance_name }}" \
+          -var="database_name=" \
+          -var="database_user=" \
+          -var="database_version=MYSQL_8_0" \
+          -var="tier=db-f1-micro"
     - name: Terraform Destroy
       run: |
-        terraform destroy -auto-approve 
+        terraform destroy -auto-approve \
+          -var="project_id=${{ github.event.inputs.project_id }}" \
+          -var="region=${{ github.event.inputs.region }}" \
+          -var="instance_name=${{ github.event.inputs.instance_name }}" \
+          -var="database_name=" \
+          -var="database_user=" \
+          -var="database_version=MYSQL_8_0" \
+          -var="tier=db-f1-micro"
