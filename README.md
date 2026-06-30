@@ -46,6 +46,12 @@ To stay within the free tier, ensure your usage does not exceed:
 ## Prerequisites
 1.  **Google Cloud SDK**: [Installed and initialized](https://cloud.google.com/sdk/docs/install).
 2.  **Terraform**: [Installed](https://developer.hashicorp.com/terraform/downloads).
+3.  **GCS Bucket for Remote State** (recommended for teams/CI): Create a GCS bucket to store Terraform state remotely.
+    ```bash
+    gcloud storage buckets create gs://your-terraform-state-bucket \
+      --location=us-central1 \
+      --uniform-bucket-level-access
+    ```
 
 ## Setup & Deployment
 
@@ -69,16 +75,28 @@ To stay within the free tier, ensure your usage does not exceed:
     database_user  = "user"
     ```
 
-3.  **Deploy**:
+3.  **Initialize Terraform** (choose one):
+
+    **Local state** (default, single-user):
     ```bash
-    # Initialize
     terraform init
-    
-    # Apply changes
+    ```
+
+    **Remote state** (GCS backend, recommended for teams/CI):
+    ```bash
+    # Copy and edit the example backend config
+    cp backend.tfvars.example backend.tfvars
+    # Edit backend.tfvars with your bucket name
+
+    terraform init -backend-config="backend.tfvars"
+    ```
+
+4.  **Deploy**:
+    ```bash
     terraform apply
     ```
 
-4.  **Outputs**:
+5.  **Outputs**:
     After a successful deployment, Terraform will output the instance details.
 
 ## CI/CD Setup (GitHub Actions)
@@ -98,6 +116,26 @@ To stay within the free tier, ensure your usage does not exceed:
     - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
     - Name: `GCP_SA_KEY`
     - Value: (paste the entire JSON contents)
+
+4. **Create a GCS bucket** for Terraform remote state (if not already created):
+    ```bash
+    gcloud storage buckets create gs://your-terraform-state-bucket \
+      --location=us-central1 \
+      --uniform-bucket-level-access
+    ```
+
+5. **Add GitHub Secrets** for backend state bucket:
+
+    | Secret Name | Value |
+    |---|---|
+    | `TF_BUCKET_NAME` | Your GCS bucket name (e.g., `your-terraform-state-bucket`) |
+    | `TF_BUCKET_PREFIX` | Bucket prefix/path (e.g., `terraform-gcp-cloud-sql`) |
+
+6. **Run the workflow**:
+   - **Apply**: Go to Actions → **CD - Terraform Apply** → fill in all inputs
+   - **Destroy**: Go to Actions → **CD - Terraform Destroy** → fill in essential inputs only
+
+> Alternatively, create a `backend.tfvars` from `backend.tfvars.example` and reference it with `terraform init -backend-config="backend.tfvars"` for local use.
 
 ## Usage as a Module
 
@@ -166,6 +204,7 @@ resource "google_cloud_run_v2_service" "app" {
 | `database_user` | Name of the initial database user | `string` | (required) |
 | `database_version` | Database engine version | `string` | `"MYSQL_8_0"` |
 | `tier` | Machine type | `string` | `"db-f1-micro"` |
+
 
 ## Outputs
 
